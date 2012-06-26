@@ -1,5 +1,6 @@
 from django.db import models
 import re
+from django.core.exceptions import ImproperlyConfigured
 
 class EnumField(models.CharField):
 
@@ -29,9 +30,18 @@ class EnumField(models.CharField):
     
     def _get_field_kwargs(self, kwargs):
         options = self.options
+        
         max_length = max( map(len, [getattr(self, attr_name) for attr_name in options]) )
-        kwargs.update( {'max_length': max_length, 
-                        'choices': self.choices } )
+        if 'max_length' in kwargs:
+            if kwargs['max_length'] < max_length:
+                raise ImproperlyConfigured('Supplied max_length is too short, enum values will be truncated! It should be %s or unspecified to be set automatically' % max_length)
+        else:
+            kwargs['max_length'] = max_length
+        
+        if 'choices' in kwargs:
+            raise ImproperlyConfigured('"choices" keyword argument is not used as it is automatically generated')
+        kwargs['choices'] = self.choices
+        
         return kwargs
     
     @property
