@@ -22,18 +22,22 @@ class EnumField(models.CharField):
         kwargs = self._get_field_kwargs(kwargs)
         super(EnumField, self).__init__(*args, **kwargs)
     
+    def __getattr__(self, name):
+        if self._options is not None and name in self._options:
+            return name
+        raise AttributeError('No such enum option: %s' % name)
+    
     def _get_field_kwargs(self, kwargs):
-        options = self.get_options()
-        max_length = max( map(len, options) )
+        options = self.options
+        max_length = max( map(len, [getattr(self, attr_name) for attr_name in options]) )
         kwargs.update( {'max_length': max_length, 
                         'choices': self.choices } )
         return kwargs
     
     @property
     def choices(self):
-        options = self.options
-        return zip( options, options )
-    
+        return [ (getattr(self, attr_name), attr_name) for attr_name in self.options ]
+
     @property
     def options(self):
         """
@@ -46,7 +50,7 @@ class EnumField(models.CharField):
         options = []
         
         for attr_name in dir(self):
-            if attr_name.starts_with('_'):
+            if attr_name.startswith('_'):
                 # ignore any 'private' attributes
                 continue
             if not re.match('^[A-Z][A-Z0-9_]+$', attr_name):
