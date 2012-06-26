@@ -2,10 +2,11 @@
 DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'gubbins-db.sqlite',
+                'NAME': ':memory',
                 'USER': '',
                 'PASSWORD': '',
                 'HOST': '',
                 'PORT': '',
         }
 }
+
