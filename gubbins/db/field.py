@@ -46,7 +46,11 @@ class EnumField(models.CharField):
     
     @property
     def choices(self):
-        return [ (getattr(self, attr_name), attr_name) for attr_name in self.options ]
+        return zip(self.values, self.options)
+
+    @property
+    def values(self):
+        return [ getattr(self, attr_name) for attr_name in self.options ]
 
     @property
     def options(self):

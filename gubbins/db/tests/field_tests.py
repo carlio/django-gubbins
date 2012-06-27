@@ -38,6 +38,13 @@ class EnumFieldTest(TestCase):
         self.assertTrue( ('b', 'BANANA') in choices )
         
 
+    def test_values(self):
+        field = FruitField()
+        self.assertEqual(3, len(field.values))
+        self.assertTrue(FruitField.APPLE in field.values)
+        self.assertTrue(FruitField.PEAR in field.values)
+        self.assertTrue(FruitField.BANANA in field.values)
+
     def test_max_length_calculation(self):
         
         field = FruitField()
@@ -66,7 +73,9 @@ class EnumFieldOnModelTest(TestCase):
         self.assertEqual(FruitField.APPLE, loaded_test_model.fruit)
         
     def test_default_value(self):
-        
         food = FoodModel.objects.create(fruit=FruitField.APPLE)
         self.assertEqual(FishField.COD, food.fish)
+
+    def test_only_valid_values_can_be_set(self):
+        FoodModel.objects.create(fruit='chocolate')
         
