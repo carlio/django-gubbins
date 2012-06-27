@@ -77,5 +77,7 @@ class EnumFieldOnModelTest(TestCase):
         self.assertEqual(FishField.COD, food.fish)
 
     def test_only_valid_values_can_be_set(self):
-        FoodModel.objects.create(fruit='chocolate')
-        
+        # test invalid valies
+        self.assertRaises(ValueError, FoodModel.objects.create, fruit='chocolate')
+        # check valid values
+        FoodModel.objects.create(fruit=FruitField.APPLE)
