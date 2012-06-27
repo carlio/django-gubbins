@@ -44,6 +44,11 @@ class EnumField(models.CharField):
         
         return kwargs
     
+    def get_prep_value(self, value):
+        if value not in self.values:
+            raise ValueError('%s is not an acceptable value for this field' % value)
+        return super(EnumField, self).get_prep_value(value)
+    
     @property
     def choices(self):
         return zip(self.values, self.options)
