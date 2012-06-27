@@ -1,7 +1,7 @@
 from django.test import TestCase
 from gubbins.db.field import EnumField
 from django.core.exceptions import ImproperlyConfigured
-from gubbins.db.tests.models import TestField, TestModel
+from gubbins.db.tests.models import FruitField, FishField, FoodModel
 
 
 
@@ -25,7 +25,7 @@ class EnumFieldTest(TestCase):
         
     def test_options_from_attributes(self):
             
-        field = TestField()
+        field = FruitField()
             
         self.assertEqual('a', field.APPLE)
         self.assertEqual('p', field.PEAR)
@@ -40,7 +40,7 @@ class EnumFieldTest(TestCase):
 
     def test_max_length_calculation(self):
         
-        field = TestField()
+        field = FruitField()
         self.assertEqual(1, field.max_length)
         
         field = EnumField(options=['APPLE', 'PEAR', 'BANANA'])
@@ -59,7 +59,14 @@ class EnumFieldTest(TestCase):
 class EnumFieldOnModelTest(TestCase):
     
     def test_value_persistence(self):
-        test_model = TestModel.objects.create(fruit=TestField.APPLE)
-        print test_model.id
+        test_model = FoodModel.objects.create(fruit=FruitField.APPLE)
+        self.assertEqual(FruitField.APPLE, test_model.fruit)
         
+        loaded_test_model = FoodModel.objects.get(pk=test_model.id)
+        self.assertEqual(FruitField.APPLE, loaded_test_model.fruit)
+        
+    def test_default_value(self):
+        
+        food = FoodModel.objects.create(fruit=FruitField.APPLE)
+        self.assertEqual(FishField.COD, food.fish)
         
