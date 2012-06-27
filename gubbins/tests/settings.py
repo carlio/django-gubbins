@@ -1,4 +1,6 @@
 
+INSTALLED_APPS = ['gubbins', 'gubbins.db.tests']
+
 DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',

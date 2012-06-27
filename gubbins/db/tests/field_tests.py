@@ -1,12 +1,9 @@
 from django.test import TestCase
 from gubbins.db.field import EnumField
 from django.core.exceptions import ImproperlyConfigured
+from gubbins.db.tests.models import TestField, TestModel
 
 
-class TestField(EnumField):
-    APPLE = 'a'
-    PEAR = 'p'
-    BANANA = 'b'
 
 
 class EnumFieldTest(TestCase):
@@ -57,6 +54,12 @@ class EnumFieldTest(TestCase):
     def test_choices_kwarg_cannot_be_set(self):
         self.assertRaises(ImproperlyConfigured, EnumField, options=['CAKES'], choices=[('c', 'CAKES')])
         
-        
+
+
+class EnumFieldOnModelTest(TestCase):
+    
+    def test_value_persistence(self):
+        test_model = TestModel.objects.create(fruit=TestField.APPLE)
+        print test_model.id
         
         
