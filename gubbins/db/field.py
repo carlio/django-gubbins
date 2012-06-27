@@ -82,4 +82,17 @@ class EnumField(models.CharField):
             options.append(attr_name)
         
         return options
-            
+    
+    def south_field_triple(self):
+        # see http://south.readthedocs.org/en/latest/customfields.html#south-field-triple
+        module = self.__class__.__module__
+        field_name = self.__class__.__name__
+        
+        kwargs = {}
+        if self._options is not None:
+            # we were defined using constructor arguments rather than 
+            # using class attributes, so we need to include that here
+            kwargs = {'options': str(self.options) }
+        
+        return ('%s.%s' % (module, field_name),
+                [], kwargs)
