@@ -1,5 +1,5 @@
 
-INSTALLED_APPS = ['gubbins', 'gubbins.db.tests']
+INSTALLED_APPS = ['django_jenkins', 'gubbins', 'gubbins.db.tests']
 
 DATABASES = {
         'default': {
