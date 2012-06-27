@@ -13,10 +13,14 @@ _install_requires = [
        ]
 
 setup( name='django-gubbins',
+       url='https://github.com/carlio/django-gubbins',
+       author='Carl Crowder',
+       author_email='django-gubbins@jqx.be',
        version=_version,
        packages=_packages,
        install_requires=_install_requires,
        scripts=[
            # 'scripts/manage',
        ],
+
 )
