@@ -21,6 +21,7 @@ class FishField(EnumField):
 class FoodModel(models.Model):
     fruit = FruitField()
     fish = FishField(default=FishField.COD)
+    other_fruit = FruitField(blank=True, null=True)
     
     
     

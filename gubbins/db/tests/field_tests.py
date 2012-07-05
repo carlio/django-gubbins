@@ -62,7 +62,6 @@ class EnumFieldTest(TestCase):
         self.assertRaises(ImproperlyConfigured, EnumField, options=['CAKES'], choices=[('c', 'CAKES')])
         
 
-
 class EnumFieldOnModelTest(TestCase):
     
     def test_value_persistence(self):
@@ -80,4 +79,4 @@ class EnumFieldOnModelTest(TestCase):
         # test invalid valies
         self.assertRaises(ValueError, FoodModel.objects.create, fruit='chocolate')
         # check valid values
-        FoodModel.objects.create(fruit=FruitField.APPLE)
+        FoodModel.objects.create(fruit=FruitField.APPLE, other_fruit=None)
