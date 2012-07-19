@@ -8,11 +8,9 @@ class EnumMeta(type):
     
     def __new__(cls, name, bases, attrs):
         inst = super(EnumMeta, cls).__new__(cls, name, bases, attrs)
-        
         inst.options = EnumMeta._get_options(inst)
         inst.values = EnumMeta._get_values(inst)
         inst.choices = zip(inst.values, inst.options)
-        
         return inst
     
     @staticmethod
@@ -66,9 +64,7 @@ class EnumField(models.CharField):
         raise AttributeError('No such enum option: %s' % name)
     
     def _get_field_kwargs(self, kwargs):
-        options = self.options
-        
-        max_length = max( map(len, [getattr(self, attr_name) for attr_name in options]) )
+        max_length = max( map(len, map(str, self.values) ) )
         if 'max_length' in kwargs:
             if kwargs['max_length'] < max_length:
                 raise ImproperlyConfigured('Supplied max_length is too short, enum values will be truncated! It should be %s or unspecified to be set automatically' % max_length)

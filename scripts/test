@@ -1,0 +1,3 @@
+#!/bin/bash
+.env/bin/django-admin.py test --settings=gubbins.tests.settings
+

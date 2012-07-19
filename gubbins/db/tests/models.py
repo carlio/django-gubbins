@@ -17,12 +17,21 @@ class FishField(EnumField):
     SALMON = 'salmon'
     COD = 'cod'
     TROUT = 'trout'
+    
+
+class CountingField(EnumField):
+    ONE = 1
+    TWO = 2
+    THREE = 3
                 
 class FoodModel(models.Model):
     fruit = FruitField()
     fish = FishField(default=FishField.COD)
     other_fruit = FruitField(blank=True, null=True)
     
+    
+class CountingModel(models.Model):
+    count = CountingField()
     
     
 # --------------------------------    

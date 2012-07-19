@@ -1,7 +1,7 @@
 from django.test import TestCase
-from gubbins.db.field import EnumField
 from django.core.exceptions import ImproperlyConfigured
-from gubbins.db.tests.models import FruitField, FishField, FoodModel
+from gubbins.db.tests.models import FruitField, FishField, FoodModel,\
+    CountingModel, CountingField
 
 
 
@@ -29,6 +29,9 @@ class EnumFieldTest(TestCase):
         self.assertTrue( ('p', 'PEAR') in choices )
         self.assertTrue( ('b', 'BANANA') in choices )
         
+
+    def test_non_string_values(self):
+        CountingModel.objects.create(count=CountingField.TWO)
 
     def test_values(self):
         field = FruitField()
