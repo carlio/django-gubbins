@@ -8,20 +8,12 @@ from gubbins.db.tests.models import FruitField, FishField, FoodModel
 
 class EnumFieldTest(TestCase):
     
-    def test_options_from_constructor_arg(self):
-        
-        field = EnumField(options=['APPLE', 'PEAR', 'BANANA'])
-        
-        self.assertEqual('APPLE', field.APPLE)
-        self.assertEqual('PEAR', field.PEAR)
-        self.assertEqual('BANANA', field.BANANA)
-
-        choices = field.choices        
+    def test_static_choices_access(self):
+        choices = FruitField.choices
         self.assertEqual(3, len(choices))
-        self.assertTrue( ('APPLE', 'APPLE') in choices )
-        self.assertTrue( ('PEAR', 'PEAR') in choices )
-        self.assertTrue( ('BANANA', 'BANANA') in choices )
-        
+        self.assertTrue( ('a', 'APPLE') in choices )
+        self.assertTrue( ('p', 'PEAR') in choices )
+        self.assertTrue( ('b', 'BANANA') in choices )
         
     def test_options_from_attributes(self):
             
@@ -50,16 +42,16 @@ class EnumFieldTest(TestCase):
         field = FruitField()
         self.assertEqual(1, field.max_length)
         
-        field = EnumField(options=['APPLE', 'PEAR', 'BANANA'])
+        field = FishField()
         self.assertEqual(6, field.max_length)
         
         
     def test_custom_max_length_value(self):
-        self.assertRaises(ImproperlyConfigured, EnumField, options=['FISH'], max_length=2)
-        EnumField(options=['FISH'], max_length=200)
+        self.assertRaises(ImproperlyConfigured, FishField, max_length=2)
+        FishField(max_length=200)
         
     def test_choices_kwarg_cannot_be_set(self):
-        self.assertRaises(ImproperlyConfigured, EnumField, options=['CAKES'], choices=[('c', 'CAKES')])
+        self.assertRaises(ImproperlyConfigured, FishField, choices=[('c', 'CAKES')])
         
 
 class EnumFieldOnModelTest(TestCase):

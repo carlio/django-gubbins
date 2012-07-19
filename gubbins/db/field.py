@@ -2,24 +2,61 @@ from django.db import models
 import re
 from django.core.exceptions import ImproperlyConfigured
 
-class EnumField(models.CharField):
 
+
+class EnumMeta(type):
+    
+    def __new__(cls, name, bases, attrs):
+        inst = super(EnumMeta, cls).__new__(cls, name, bases, attrs)
+        
+        inst.options = EnumMeta._get_options(inst)
+        inst.values = EnumMeta._get_values(inst)
+        inst.choices = zip(inst.values, inst.options)
+        
+        return inst
+    
+    @staticmethod
+    def _get_options(inst):
+        """
+        Gets the list of possible options for this object.
+        """
+        options = []
+        
+        for attr_name in dir(inst):
+            if attr_name.startswith('_'):
+                # ignore any 'private' attributes
+                continue
+            if not re.match('^[A-Z][A-Z0-9_]+$', attr_name):
+                # ignore anything which is not all uppercase
+                continue
+            attr = getattr(inst, attr_name)
+            if callable(attr):
+                # ignore anything which is not a simple value
+                continue
+            options.append(attr_name)
+        
+        return options
+
+    @staticmethod
+    def _get_values(inst):
+        return [ getattr(inst, attr_name) for attr_name in inst.options ]
+
+
+
+class EnumField(models.CharField):
     """
     
-    The following are identical::
-    
-      class SourceType(EnumField):
-          options = ['WIKIPEDIA', 'BBC_NEWS', 'TWITTER']
-          
+    Example usage::
+
       class SourceType(EnumField):
           WIKIPEDIA = 'w'
           BBC_NEWS = 'b'
           TWITTER = 't'
     
     """
+    __metaclass__ = EnumMeta
     
-    def __init__(self, options=None, *args, **kwargs):
-        self._options = options
+    def __init__(self, *args, **kwargs):
         kwargs = self._get_field_kwargs(kwargs)
         super(EnumField, self).__init__(*args, **kwargs)
     
@@ -48,40 +85,6 @@ class EnumField(models.CharField):
         if value not in [None, ''] + self.values:
             raise ValueError('%s is not an acceptable value for this field' % value)
         return super(EnumField, self).get_prep_value(value)
-    
-    @property
-    def choices(self):
-        return zip(self.values, self.options)
-
-    @property
-    def values(self):
-        return [ getattr(self, attr_name) for attr_name in self.options ]
-
-    @property
-    def options(self):
-        """
-        Gets the list of possible options for this object.
-        """
-        # first check in case they are explicitly defined
-        if self._options is not None:
-            return self._options
-        
-        options = []
-        
-        for attr_name in dir(self):
-            if attr_name.startswith('_'):
-                # ignore any 'private' attributes
-                continue
-            if not re.match('^[A-Z][A-Z0-9_]+$', attr_name):
-                # ignore anything which is not all uppercase
-                continue
-            attr = getattr(self, attr_name)
-            if callable(attr):
-                # ignore anything which is not a simple value
-                continue
-            options.append(attr_name)
-        
-        return options
     
     def south_field_triple(self):
         # see http://south.readthedocs.org/en/latest/customfields.html#south-field-triple
