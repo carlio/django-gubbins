@@ -59,7 +59,7 @@ class EnumField(models.CharField):
         super(EnumField, self).__init__(*args, **kwargs)
     
     def __getattr__(self, name):
-        if self._options is not None and name in self._options:
+        if self.options is not None and name in self.options:
             return name
         raise AttributeError('No such enum option: %s' % name)
     
