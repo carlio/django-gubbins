@@ -3,7 +3,7 @@ from gubbins.db.tests.models import Car, Train, Colour, Vehicle
 
 class TestModelInheritence(TestCase):
     
-    def test_subclasses_returned(self):
+    def test_subclasses_returned_from_filter(self):
         
         _ = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
         green_car = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.GREEN)
@@ -18,3 +18,8 @@ class TestModelInheritence(TestCase):
         
         self.assertEqual(train.id, green_vehicles[1].id)
         self.assertTrue( isinstance(green_vehicles[1], Train) )
+
+    def test_subclasses_returned_from_get(self):
+        car = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
+        fetched_car = Vehicle.objects.get(pk=car.id)
+        self.assertTrue( isinstance( fetched_car, Car) )

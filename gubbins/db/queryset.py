@@ -17,6 +17,10 @@ class InheritanceQuerySet(QuerySet):
         new_qs.subclasses = subclasses
         return new_qs
 
+    def filter(self, *args, **kwargs): #@ReservedAssignment inherited method, can't rename
+        qs = QuerySet.filter(self, *args, **kwargs)
+        return qs.select_subclasses()
+
     def _clone(self, klass=None, setup=False, **kwargs):
         try:
             kwargs.update({'subclasses': self.subclasses})
