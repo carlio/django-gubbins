@@ -1,6 +1,8 @@
-from django.db import models
-import re
 from django.core.exceptions import ImproperlyConfigured
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db import models
+import json
+import re
 
 
 
@@ -87,3 +89,52 @@ class EnumField(models.CharField):
         module = self.__class__.__module__
         field_name = self.__class__.__name__
         return ('%s.%s' % (module, field_name), [], {})
+
+
+
+
+class JSONField(models.TextField):
+    """
+    JSONField is a generic textfield that neatly serializes/unserializes
+    JSON objects seamlessly.
+    Django snippet #1478
+
+    example:
+        class Page(models.Model):
+            data = JSONField(blank=True, null=True)
+
+
+        page = Page.objects.get(pk=5)
+        page.data = {'title': 'test', 'type': 3}
+        page.save()
+    """
+    # origially cribbed from django-annoying, which seems to have lain dormant
+    # for a while and no pull requests are getting merged in, and has been cloned
+    # to death
+
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        if value == "":
+            return None
+
+        try:
+            if isinstance(value, basestring):
+                return json.loads(value)
+        except ValueError:
+            pass
+        return value
+
+    def get_db_prep_save(self, value, *args, **kwargs):
+        if value == "":
+            return None
+        if isinstance(value, dict):
+            value = json.dumps(value, cls=DjangoJSONEncoder)
+        return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
+    
+    def south_field_triple(self):
+        # see http://south.readthedocs.org/en/latest/customfields.html#south-field-triple
+        module = self.__class__.__module__
+        field_name = self.__class__.__name__
+        return ('%s.%s' % (module, field_name), [], {})
+    
