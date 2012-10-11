@@ -1,10 +1,12 @@
-from django.test import TestCase
 from django.core.exceptions import ImproperlyConfigured
-from gubbins.db.tests.models import FruitField, FishField, FoodModel,\
-    CountingModel, CountingField
+from django.db import models
+from django.test import TestCase
+from gubbins.db.field import EnumField
 
 
-
+# ------------------------
+# Test cases
+# ------------------------
 
 class EnumFieldTest(TestCase):
     
@@ -75,3 +77,36 @@ class EnumFieldOnModelTest(TestCase):
         self.assertRaises(ValueError, FoodModel.objects.create, fruit='chocolate')
         # check valid values
         FoodModel.objects.create(fruit=FruitField.APPLE, other_fruit=None)
+        
+        
+
+
+# ---------------------
+# Test models
+# ---------------------
+
+class FruitField(EnumField):
+    APPLE = 'a'
+    PEAR = 'p'
+    BANANA = 'b'
+    
+    
+class FishField(EnumField):
+    SALMON = 'salmon'
+    COD = 'cod'
+    TROUT = 'trout'
+    
+
+class CountingField(EnumField):
+    ONE = 1
+    TWO = 2
+    THREE = 3
+                
+class FoodModel(models.Model):
+    fruit = FruitField()
+    fish = FishField(default=FishField.COD)
+    other_fruit = FruitField(blank=True, null=True)
+    
+    
+class CountingModel(models.Model):
+    count = CountingField()

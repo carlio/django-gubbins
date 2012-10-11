@@ -1,5 +1,13 @@
 from django.test import TestCase
-from gubbins.db.tests.models import Car, Train, Colour, Vehicle
+from gubbins.db.field import EnumField
+from django.db import models
+from gubbins.db.manager import InheritanceManager
+
+
+# ------------------------
+# Test Cases
+# ------------------------
+
 
 class TestModelInheritence(TestCase):
     
@@ -23,3 +31,30 @@ class TestModelInheritence(TestCase):
         car = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
         fetched_car = Vehicle.objects.get(pk=car.id)
         self.assertTrue( isinstance( fetched_car, Car) )
+        
+        
+
+    
+    
+# --------------------------------    
+# Test models
+# --------------------------------
+
+class Colour(EnumField):
+    RED = 'r'
+    GREEN = 'gr'
+    BLUE = 'bl'
+
+class Vehicle(models.Model):
+    objects = InheritanceManager()
+    
+    colour = Colour()
+    wheel_count = models.IntegerField()
+
+class Car(Vehicle):
+    airbags = models.BooleanField()
+
+class Train(Vehicle):
+    train_number = models.CharField(max_length=10)
+    
+    

@@ -109,10 +109,16 @@ class JSONField(models.TextField):
         page.save()
     """
     # origially cribbed from django-annoying, which seems to have lain dormant
-    # for a while and no pull requests are getting merged in, and has been cloned
-    # to death
+    # for a while and no pull requests are getting merged in
 
     __metaclass__ = models.SubfieldBase
+    _type_keys = {dict: 'd', list: 'l'}
+
+    class CannotStoreTypeException(Exception):
+        def __init__(self, type_):
+            self._type = type_
+        def __repr__(self):
+            return 'Cannot store type in a JSONField: %s' % self._type
 
     def to_python(self, value):
         if value == "":
@@ -120,7 +126,10 @@ class JSONField(models.TextField):
 
         try:
             if isinstance(value, basestring):
-                return json.loads(value)
+                data = json.loads(value)
+                # the dictionary stored only has one key (representing 
+                # the type stored), so we can just return the single value
+                return data.values()[0]
         except ValueError:
             pass
         return value
@@ -128,8 +137,15 @@ class JSONField(models.TextField):
     def get_db_prep_save(self, value, *args, **kwargs):
         if value == "":
             return None
-        if isinstance(value, dict):
-            value = json.dumps(value, cls=DjangoJSONEncoder)
+        
+        # see what dummy key we need to use
+        try:
+            key = JSONField._type_keys[type(value)]
+        except KeyError:
+            raise JSONField.CannotStoreTypeException(type(value))
+
+        value = {key: value}
+        value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
     
     def south_field_triple(self):
