@@ -23,7 +23,7 @@ class JSONFieldTest(TestCase):
         retrieve a dictionary with a variety of data types
         as values
         """
-        data = {'a': 1, 'b': 'two', 'c': u"üéß¢Ω", 'd': [1,2,3,4], 
+        data = {'a': 1, 'b': 'two', 'c': u'\xfc\xe9\xdf\xa2\u03a9', 'd': [1,2,3,4], 
                 'e': {'e1': 4, 'e2': 'fish'} }
         self._test_storable(data)
 
