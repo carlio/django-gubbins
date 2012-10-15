@@ -5,7 +5,7 @@ or replacing functionality within Django.
 
 ## Automatic downcasting to model subclasses
 
-See `gubbins.db.queryset.InheritanceQuerySet` and `gubbins.db.manager.IneritanceManager`
+See `gubbins.db.queryset.InheritanceQuerySet` and `gubbins.db.manager.InheritanceManager`
 
 ## `EnumField` 
 
