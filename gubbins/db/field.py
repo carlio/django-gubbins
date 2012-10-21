@@ -53,6 +53,9 @@ class EnumField(models.CharField):
           BBC_NEWS = 'b'
           TWITTER = 't'
     
+    Note that field names must be uppercase to be recognised
+    as possible field values
+    
     """
     __metaclass__ = EnumMeta
     
