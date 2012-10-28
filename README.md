@@ -1,5 +1,7 @@
 # django-gubbins
 
+[![Build Status](https://secure.travis-ci.org/carlio/django-scraping.png)](http://travis-ci.org/carlio/django-scraping)
+
 Django Gubbins is a collection of useful snippets for enhancing
 or replacing functionality within Django.
 
