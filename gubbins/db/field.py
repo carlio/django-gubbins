@@ -5,11 +5,28 @@ import json
 import re
 
 
+meta_super_class = type
+try:
+    # Django version 1.3 used this class for metaclasses of fields,
+    # which results in an error when trying to use the EnumMeta
+    # metaclass instead:
+    #
+    #       metaclass conflict: the metaclass of a derived class must be 
+    #       a (non-strict) subclass of the metaclasses of all its bases
+    #
+    # This is because using EnumMeta causes fields to have two 'metaclass'
+    # definitions when using Django 1.3. The solution is to have EnumMeta
+    # be a subclass of LegacyConnection, but this is only possible in 1.3
+    # as in 1.4, Legacy Connection was removed
+    from django.db.models.fields.subclassing import LegacyConnection
+    meta_super_class = LegacyConnection
+except ImportError:
+    pass
 
-class EnumMeta(type):
+class EnumMeta(meta_super_class):
     
     def __new__(cls, name, bases, attrs):
-        inst = super(EnumMeta, cls).__new__(cls, name, bases, attrs)
+        inst = meta_super_class.__new__(cls, name, bases, attrs)
         inst.options = EnumMeta._get_options(inst)
         inst.values = EnumMeta._get_values(inst)
         inst.choices = zip(inst.values, inst.options)
