@@ -5,7 +5,9 @@
 Django Gubbins is a collection of useful snippets for enhancing
 or replacing functionality within Django.
 
-## Automatic downcasting to model subclasses
+## Models
+
+### Automatic downcasting to model subclasses
 
 This is for the case when you have a model hierarchy, with several models inheriting from
 a base class, and you want to query the base class but get instances of the subclasses
@@ -43,7 +45,9 @@ From now on any queryset on `MyBaseModel` will correctly downcast to the subclas
 See http://jeffelmore.org/tag/django-python-inheritance-downcasting-orm-polymorphism-queryset/
 
 
-## EnumField 
+## Fields
+
+### EnumField 
 
 `EnumField` provides an easy way to have a model field which only accepts some values, and at the same
 time makes it easy to reference those values in your code.
@@ -88,7 +92,7 @@ Using an unspecified value will result in a `ValueError` when trying to save the
     
 
         
-## JSONField
+### JSONField
 
 `gubbins.db.field.JSONField` allows you to store JSON strings in a database. It automatically uses `json.loads` and `json.dumps` to convert to and from strings.
 
@@ -117,6 +121,8 @@ Note that there are likely to be several outstanding bugs (for example you can't
 
 ## URLs
 
+### ReusableAppURLs
+
 `ReusableAppURLs` is a simple way to create the correct URL configuration for a reusable
 django app.
 
@@ -133,3 +139,12 @@ Usage:
 
        # or with instance namespace
        urlpatterns = patterns(r'^path/', myapp.urls('myapp1'))
+       
+       
+## Files
+
+ `SlowFileUploadHandler` can be used to really slow down handling of file uploads. This is an implementation of the Django file upload handler which will sleep between processing chunks in order to simulate a slow upload. This is intended for development when creating features such as an AJAXy file upload progress bar, as uploading to a local process is often too quick.
+
+You can either use it globally or per request, see [the Django file upload documentation](https://docs.djangoproject.com/en/1.4/topics/http/file-uploads/#writing-custom-upload-handlers) for information on how.
+
+It is recommended to use this based on the `DEBUG` setting to prevent accidentally enabling this on live.
