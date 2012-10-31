@@ -2,8 +2,9 @@
 from distutils.core import setup
 from setuptools import find_packages
 import os
+import time
 
-_version = "1.0.1"
+_version = "0.%s.dev" % int(time.time())
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
     
 # common dependencies
