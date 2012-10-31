@@ -132,7 +132,6 @@ class JSONField(models.TextField):
     # for a while and no pull requests are getting merged in
 
     __metaclass__ = models.SubfieldBase
-    _type_keys = {dict: 'd', list: 'l'}
 
     class CannotStoreTypeException(Exception):
         def __init__(self, type_):
@@ -146,12 +145,11 @@ class JSONField(models.TextField):
 
         try:
             if isinstance(value, basestring):
-                data = json.loads(value)
-                # the dictionary stored only has one key (representing 
-                # the type stored), so we can just return the single value
-                return data.values()[0]
+                return json.loads(value)
         except ValueError:
-            pass
+            pass 
+        # TODO: this is shitty behaviour, should be fixed, but what should the
+        # field do if the value in the database is invalid?
         return value
 
     def get_db_prep_save(self, value, *args, **kwargs):
@@ -159,12 +157,9 @@ class JSONField(models.TextField):
             return None
         
         # see what dummy key we need to use
-        try:
-            key = JSONField._type_keys[type(value)]
-        except KeyError:
+        if not isinstance(value, dict):
             raise JSONField.CannotStoreTypeException(type(value))
 
-        value = {key: value}
         value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
     
