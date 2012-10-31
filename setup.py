@@ -2,7 +2,7 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-_version = "1.0.1"
+_version = "1.0.2"
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
     
 # common dependencies
