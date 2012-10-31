@@ -26,14 +26,6 @@ class JSONFieldTest(TestCase):
         data = {'a': 1, 'b': 'two', 'c': u'\xfc\xe9\xdf\xa2\u03a9', 'd': [1,2,3,4], 
                 'e': {'e1': 4, 'e2': 'fish'} }
         self._test_storable(data)
-
-        
-    def test_store_list(self):
-        """
-        Ensures that the JSONField can store a list directly
-        """
-        array = [1,2,3,'a','b',{'c':4, 'e':['t', 'y']}]
-        self._test_storable(array)
         
     def test_store_unknown_types(self):
         class Banana:
