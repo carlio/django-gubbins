@@ -143,6 +143,8 @@ Usage:
        
 ## Files
 
+### SlowFileUploadHandler
+
  `SlowFileUploadHandler` can be used to really slow down handling of file uploads. This is an implementation of the Django file upload handler which will sleep between processing chunks in order to simulate a slow upload. This is intended for development when creating features such as an AJAXy file upload progress bar, as uploading to a local process is often too quick.
 
 You can either use it globally or per request, see [the Django file upload documentation](https://docs.djangoproject.com/en/1.4/topics/http/file-uploads/#writing-custom-upload-handlers) for information on how.
