@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 from distutils.core import setup
 from setuptools import find_packages
-import time
+import os
 
-_version = "1.0"
+_version = "1.0.1"
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
     
 # common dependencies
@@ -11,7 +11,9 @@ _install_requires = [
             'django',
        ]
 
-with open('README.md') as f:
+here_dir = os.path.dirname( __file__ )
+
+with open( os.path.join(here_dir, 'README.md')) as f:
     _long_description = f.read()
 
 setup( name='django-gubbins',
