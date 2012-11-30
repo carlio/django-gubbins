@@ -1,0 +1,5 @@
+
+1.1
+===
+
+* Reinstated ability to store lists in a JSONField
