@@ -1,4 +1,11 @@
 
+1.2
+===
+
+* Removed recommendation to include 'from .urls import urls' from __init__.py, as it had the potential to cause
+  strange import ordering behaviour with Django. Although 'appname.urls.urls()' is a bit uglier when including in
+  a urlpatterns list, it's more explicit and less fragile.
+
 1.1
 ===
 
