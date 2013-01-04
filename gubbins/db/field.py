@@ -157,7 +157,7 @@ class JSONField(models.TextField):
             return None
         
         # see what dummy key we need to use
-        if not isinstance(value, dict):
+        if not isinstance(value, (list, dict)):
             raise JSONField.CannotStoreTypeException(type(value))
 
         value = json.dumps(value, cls=DjangoJSONEncoder)

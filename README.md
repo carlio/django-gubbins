@@ -129,16 +129,16 @@ django app.
 
 Usage:
 
-    myapp/__init__.py
+    myapp/urls.py
        urlpatterns = ...
        urls = ReusableApp('myapp', urlpatterns)
 
 
     project_name/urls.py
-       urlpatterns = patterns(r'^path/', myapp.urls())
+       urlpatterns = patterns(r'^path/', myapp.urls.urls())
 
        # or with instance namespace
-       urlpatterns = patterns(r'^path/', myapp.urls('myapp1'))
+       urlpatterns = patterns(r'^path/', myapp.urls.urls('myapp1'))
        
        
 ## Files
