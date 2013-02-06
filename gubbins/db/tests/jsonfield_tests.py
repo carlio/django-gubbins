@@ -41,7 +41,24 @@ class JSONFieldTest(TestCase):
         self.assertRaises(JSONField.CannotStoreTypeException, self._test_storable, set())
         self.assertRaises(JSONField.CannotStoreTypeException, self._test_storable, Banana())
         self.assertRaises(JSONField.CannotStoreTypeException, self._test_storable, 'fish')
-    
+
+
+
+
+class JSONSouthTest(TestCase):
+
+    def test_correct_triple(self):
+        field = JSONField(default='{}')
+        name, args, kwargs = field.south_field_triple()
+
+        expected_kwargs = {
+            'default': "'{}'",
+        }
+
+        self.assertEqual('gubbins.db.field.JSONField', name)
+        self.assertTrue( len(args) == 0 )
+        self.assertEqual(expected_kwargs, kwargs)
+
 # -------------------
 # Test models
 # -------------------

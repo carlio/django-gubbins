@@ -77,7 +77,22 @@ class EnumFieldOnModelTest(TestCase):
         self.assertRaises(ValueError, FoodModel.objects.create, fruit='chocolate')
         # check valid values
         FoodModel.objects.create(fruit=FruitField.APPLE, other_fruit=None)
-        
+
+
+class EnumSouthTest(TestCase):
+
+    def test_correct_triple(self):
+
+        field = FruitField(default=FruitField.APPLE)
+        name, args, kwargs = field.south_field_triple()
+
+        expected_kwargs = {'max_length': '1',
+                           'default': "'a'"}
+
+        self.assertEqual('gubbins.db.tests.enumfield_tests.FruitField', name)
+        self.assertTrue( len(args) == 0 )
+        self.assertEqual(expected_kwargs, kwargs)
+
         
 
 
