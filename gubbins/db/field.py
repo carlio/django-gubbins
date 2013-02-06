@@ -5,7 +5,6 @@ import json
 import re
 
 
-meta_super_class = type
 try:
     # Django version 1.3 used this class for metaclasses of fields,
     # which results in an error when trying to use the EnumMeta
@@ -21,7 +20,8 @@ try:
     from django.db.models.fields.subclassing import LegacyConnection
     meta_super_class = LegacyConnection
 except ImportError:
-    pass
+    meta_super_class = type
+
 
 class EnumMeta(meta_super_class):
     
@@ -108,7 +108,15 @@ class EnumField(models.CharField):
         # see http://south.readthedocs.org/en/latest/customfields.html#south-field-triple
         module = self.__class__.__module__
         field_name = self.__class__.__name__
-        return ('%s.%s' % (module, field_name), [], {})
+
+        from south.modelsinspector import introspector
+        # south is not an explicit dependency for django-gubbins, however, this method will only be called from
+        # south or in a situation where south is installed, barring obtuse chicanery, so this import is okay.
+        args, kwargs = introspector(self)
+        if 'choices' in kwargs:
+            del kwargs['choices']
+
+        return '%s.%s' % (module, field_name), [], kwargs
 
 
 
