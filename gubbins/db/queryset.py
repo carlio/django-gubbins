@@ -5,9 +5,7 @@ from django.db.models.query import QuerySet
 
 # see http://jeffelmore.org/tag/django-python-inheritance-downcasting-orm-polymorphism-queryset/
 class InheritanceQuerySet(QuerySet):
-    """
-    """
-    
+
     def select_subclasses(self, *subclasses):
         if not subclasses:
             subclasses = [o for o in dir(self.model)

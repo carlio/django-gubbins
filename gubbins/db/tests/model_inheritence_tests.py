@@ -31,6 +31,11 @@ class TestModelInheritence(TestCase):
         car = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
         fetched_car = Vehicle.objects.get(pk=car.id)
         self.assertTrue( isinstance( fetched_car, Car) )
+
+    def test_subclasses_returned_from_all(self):
+        Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
+        fetched_car = Vehicle.objects.all()[0]
+        self.assertTrue( isinstance( fetched_car, Car) )
         
         
 
