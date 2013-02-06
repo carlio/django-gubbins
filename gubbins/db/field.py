@@ -175,5 +175,9 @@ class JSONField(models.TextField):
         # see http://south.readthedocs.org/en/latest/customfields.html#south-field-triple
         module = self.__class__.__module__
         field_name = self.__class__.__name__
-        return ('%s.%s' % (module, field_name), [], {})
-    
+
+        from south.modelsinspector import introspector
+        # south is not an explicit dependency for django-gubbins, however, this method will only be called from
+        # south or in a situation where south is installed, barring obtuse chicanery, so this import is okay.
+        args, kwargs = introspector(self)
+        return '%s.%s' % (module, field_name), [], kwargs

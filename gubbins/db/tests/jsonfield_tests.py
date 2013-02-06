@@ -48,15 +48,16 @@ class JSONFieldTest(TestCase):
 class JSONSouthTest(TestCase):
 
     def test_correct_triple(self):
-
-        field = JSONField()
+        field = JSONField(default='{}')
         name, args, kwargs = field.south_field_triple()
 
+        expected_kwargs = {
+            'default': "'{}'",
+        }
 
         self.assertEqual('gubbins.db.field.JSONField', name)
         self.assertTrue( len(args) == 0 )
-
-        print name, args, kwargs
+        self.assertEqual(expected_kwargs, kwargs)
 
 # -------------------
 # Test models
