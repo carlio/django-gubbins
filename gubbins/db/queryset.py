@@ -33,9 +33,15 @@ class InheritanceQuerySet(QuerySet):
         if hasattr(self, 'subclasses'):
             for obj in iterat:
                 for subclass in self.subclasses:
+                    # note: slightly funky behaviour here - for Django <= 1.4, the parent class has an attribute
+                    # for every subclass which is None; for Django >= 1.5, trying to access that will throw an
+                    # exception. Therefore for compatability with both versions, we use 'hasattr' to see if the
+                    # the attribute exists (will be False for 1.5+), but then also test the value we get in case
+                    # it is None (hasattr is true for <=1.4, and will return None)
                     if hasattr(obj, subclass):
-                       downcast_obj = getattr(obj, subclass)
-                       break
+                        downcast_obj = getattr(obj, subclass)
+                        if downcast_obj is not None:
+                            break
        		else:
                     downcast_obj = obj
  
