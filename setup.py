@@ -2,12 +2,12 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-_version = "1.1.1"
+_version = "1.1.2"
 _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
     
 # common dependencies
 _install_requires = [
-            'django>=1.3',
+            'django>=1.3,<1.6',
        ]
 
 _long_description = """
