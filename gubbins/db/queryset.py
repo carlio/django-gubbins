@@ -11,9 +11,11 @@ class InheritanceQuerySet(QuerySet):
             subclasses = [o for o in dir(self.model)
                           if isinstance(getattr(self.model, o), SingleRelatedObjectDescriptor)\
                           and issubclass(getattr(self.model,o).related.model, self.model)]
+
         new_qs = self.select_related(*subclasses)
         new_qs.subclasses = subclasses
         return new_qs
+
 
     def filter(self, *args, **kwargs): #@ReservedAssignment inherited method, can't rename
         qs = QuerySet.filter(self, *args, **kwargs)
@@ -28,10 +30,22 @@ class InheritanceQuerySet(QuerySet):
         
     def iterator(self):
         iterat = super(InheritanceQuerySet, self).iterator()
-        if getattr(self, 'subclasses', False):
+        if hasattr(self, 'subclasses'):
             for obj in iterat:
-                obj = [getattr(obj, s) for s in self.subclasses if getattr(obj, s)] or [obj]
-                yield obj[0]
+                for subclass in self.subclasses:
+                    # note: slightly funky behaviour here - for Django <= 1.4, the parent class has an attribute
+                    # for every subclass which is None; for Django >= 1.5, trying to access that will throw an
+                    # exception. Therefore for compatability with both versions, we use 'hasattr' to see if the
+                    # the attribute exists (will be False for 1.5+), but then also test the value we get in case
+                    # it is None (hasattr is true for <=1.4, and will return None)
+                    if hasattr(obj, subclass):
+                        downcast_obj = getattr(obj, subclass)
+                        if downcast_obj is not None:
+                            break
+       		else:
+                    downcast_obj = obj
+ 
+                yield downcast_obj
         else:
             for obj in iterat:
                 yield obj

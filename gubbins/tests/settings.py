@@ -8,6 +8,7 @@ except ImportError:
 else:
     INSTALLED_APPS += ['django_jenkins']
 
+SECRET_KEY='gubbins_tests'
 
 PROJECT_APPS = ['gubbins']
 
