@@ -16,7 +16,7 @@ class TestModelInheritence(TestCase):
         _ = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.RED)
         green_car = Car.objects.create(wheel_count=4, airbags=True, colour=Colour.GREEN)
         train = Train.objects.create(wheel_count=50, train_number='X312B', colour=Colour.GREEN)
-        
+
         green_vehicles = Vehicle.objects.filter(colour=Colour.GREEN)
         
         self.assertEqual(2, green_vehicles.count())

@@ -11,9 +11,11 @@ class InheritanceQuerySet(QuerySet):
             subclasses = [o for o in dir(self.model)
                           if isinstance(getattr(self.model, o), SingleRelatedObjectDescriptor)\
                           and issubclass(getattr(self.model,o).related.model, self.model)]
+
         new_qs = self.select_related(*subclasses)
         new_qs.subclasses = subclasses
         return new_qs
+
 
     def filter(self, *args, **kwargs): #@ReservedAssignment inherited method, can't rename
         qs = QuerySet.filter(self, *args, **kwargs)
@@ -28,10 +30,16 @@ class InheritanceQuerySet(QuerySet):
         
     def iterator(self):
         iterat = super(InheritanceQuerySet, self).iterator()
-        if getattr(self, 'subclasses', False):
+        if hasattr(self, 'subclasses'):
             for obj in iterat:
-                obj = [getattr(obj, s) for s in self.subclasses if getattr(obj, s)] or [obj]
-                yield obj[0]
+                for subclass in self.subclasses:
+                    if hasattr(obj, subclass):
+                       downcast_obj = getattr(obj, subclass)
+                       break
+       		else:
+                    downcast_obj = obj
+ 
+                yield downcast_obj
         else:
             for obj in iterat:
                 yield obj
