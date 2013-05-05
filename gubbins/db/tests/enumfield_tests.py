@@ -57,7 +57,12 @@ class EnumFieldTest(TestCase):
         
     def test_choices_kwarg_cannot_be_set(self):
         self.assertRaises(ImproperlyConfigured, FishField, choices=[('c', 'CAKES')])
-        
+
+
+    def test_from_string(self):
+        self.assertTrue(FishField.is_valid_value('salmon'))
+        self.assertFalse(FishField.is_valid_value('apple'))
+
 
 class EnumFieldOnModelTest(TestCase):
     

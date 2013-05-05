@@ -75,7 +75,14 @@ class EnumField(models.CharField):
     
     """
     __metaclass__ = EnumMeta
-    
+
+    @classmethod
+    def is_valid_value(cls, string):
+        for value, option in cls.choices:
+            if str(value) == string:
+                return True
+        return False
+
     def __init__(self, *args, **kwargs):
         kwargs = self._get_field_kwargs(kwargs)
         super(EnumField, self).__init__(*args, **kwargs)
