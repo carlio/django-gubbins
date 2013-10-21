@@ -1,6 +1,7 @@
 # django-gubbins
 
 [![Build Status](https://secure.travis-ci.org/carlio/django-gubbins.png)](http://travis-ci.org/carlio/django-gubbins)
+[![Code Quality](https://landscape.io/github/carlio/django-gubbins/master/landscape.png)](https://landscape.io/github/carlio/django-gubbins/master)
 
 Django Gubbins is a collection of useful snippets for enhancing
 or replacing functionality within Django.
