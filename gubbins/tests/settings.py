@@ -12,6 +12,8 @@ SECRET_KEY='gubbins_tests'
 
 PROJECT_APPS = ['gubbins']
 
+TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+
 DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',

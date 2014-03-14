@@ -7,7 +7,7 @@ _packages = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"])
     
 # common dependencies
 _install_requires = [
-            'django>=1.3,<1.6',
+            'django>=1.3,<1.7',
        ]
 
 _long_description = """
