@@ -5,6 +5,14 @@
 Django Gubbins is a collection of useful snippets for enhancing
 or replacing functionality within Django.
 
+# OBSOLETE
+
+Note: work on this project has been abandoned. Better alternatives
+exist for everything included here. See for example the
+[django-model-utils](https://django-model-utils.readthedocs.org/en/latest/)
+project for a replacement `InheritanceManager` implementation
+
+
 ## Models
 
 ### Automatic downcasting to model subclasses
